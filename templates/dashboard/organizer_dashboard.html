@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - EventHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+    <a href="{% url 'event_create' %}" class="btn btn-primary">Create event</a>
+</div>
+
+<div class="stats-row" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="stat-box">
+        <div class="label">My events</div>
+        <div class="value">{{ total_events }}</div>
+    </div>
+    <div class="stat-box">
+        <div class="label">Total participants</div>
+        <div class="value">{{ total_participants }}</div>
+    </div>
+</div>
+
+{% if upcoming_events %}
+    <div class="card mb-24">
+        <div class="card-header">Upcoming events</div>
+        <div class="card-body">
+            {% for event in upcoming_events %}
+                <div style="padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <a href="{% url 'event_detail' event.pk %}" style="font-weight: 500;">{{ event.title }}</a>
+                        <span class="text-muted text-sm"> — {{ event.date }}, {{ event.location }}</span>
+                    </div>
+                    <span class="text-muted text-sm">{{ event.participant_count }}/{{ event.max_participants }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">All my events</div>
+    <div class="card-body" style="padding: 0;">
+        {% if events_with_counts %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Participants</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events_with_counts %}
+                        <tr>
+                            <td><a href="{% url 'event_detail' event.pk %}">{{ event.title }}</a></td>
+                            <td>{{ event.date }}</td>
+                            <td>{{ event.location }}</td>
+                            <td>{{ event.participant_count }}/{{ event.max_participants }}</td>
+                            <td>
+                                <a href="{% url 'event_edit' event.pk %}" class="btn btn-sm">Edit</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">You haven't created any events yet.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

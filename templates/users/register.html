@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign up - EventHub{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2 class="auth-title">Create an account</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                {{ form.username.errors }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                {{ form.email.errors }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.role.id_for_label }}">I am a...</label>
+            {{ form.role }}
+            {% if form.role.errors %}
+                {{ form.role.errors }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                {{ form.password1.errors }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                {{ form.password2.errors }}
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Create account</button>
+    </form>
+    <p class="text-muted text-sm mt-16">
+        Already have an account? <a href="{% url 'login' %}">Log in</a>
+    </p>
+</div>
+{% endblock %}

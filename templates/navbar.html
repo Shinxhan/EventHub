@@ -1,0 +1,19 @@
+<div class="topbar">
+    <div class="topbar-brand">
+        <a href="{% url 'dashboard' %}" style="color: inherit;">EventHub</a>
+    </div>
+    <div class="topbar-nav">
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'event_list' %}">Events</a>
+            {% if user.is_organizer or user.is_admin %}
+                <a href="{% url 'event_create' %}">Create Event</a>
+            {% endif %}
+            <span class="topbar-user">{{ user.username }} &middot; {{ user.get_role_display }}</span>
+            <a href="{% url 'logout' %}">Log out</a>
+        {% else %}
+            <a href="{% url 'login' %}">Log in</a>
+            <a href="{% url 'register' %}">Sign up</a>
+        {% endif %}
+    </div>
+</div>

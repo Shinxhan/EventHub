@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }} - EventHub{% endblock %}
+
+{% block content %}
+<div class="detail-grid">
+    <div class="detail-info">
+        <div class="title">{{ event.title }}</div>
+        <p style="color: #444; margin-bottom: 16px; line-height: 1.6;">{{ event.description }}</p>
+
+        <div class="detail-meta"><strong>Date:</strong> {{ event.date }}</div>
+        <div class="detail-meta"><strong>Time:</strong> {{ event.time }}</div>
+        <div class="detail-meta"><strong>Location:</strong> {{ event.location }}</div>
+        <div class="detail-meta"><strong>Organizer:</strong> {{ event.organizer.username }}</div>
+        <div class="detail-meta"><strong>Capacity:</strong> {{ event.participant_count }}/{{ event.max_participants }}</div>
+
+        <div class="action-bar">
+            {% if user.is_authenticated %}
+                {% if is_registered %}
+                    <span class="badge badge-success">Registered</span>
+                    <a href="{% url 'event_unregister' event.pk %}" class="btn">Unregister</a>
+                {% else %}
+                    {% if not event.is_full and event.is_upcoming %}
+                        <a href="{% url 'event_register' event.pk %}" class="btn btn-primary">Register</a>
+                    {% elif event.is_full %}
+                        <span class="text-muted">Event is full</span>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            {% if user == event.organizer or user.is_admin %}
+                <a href="{% url 'event_edit' event.pk %}" class="btn">Edit</a>
+                <a href="{% url 'event_delete' event.pk %}" class="btn btn-danger">Delete</a>
+            {% endif %}
+            <a href="{% url 'event_list' %}" class="btn">Back</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Participants ({{ event.participant_count }})</div>
+        <div class="card-body">
+            {% if registrations %}
+                <ul class="participant-list">
+                    {% for reg in registrations %}
+                        <li>
+                            {{ reg.user.username }}
+                            <span class="text-muted text-sm">— {{ reg.timestamp|date:"M d" }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted text-sm">No one registered yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

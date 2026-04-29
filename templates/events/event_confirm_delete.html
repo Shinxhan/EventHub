@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete "{{ event.title }}" - EventHub{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <h2 class="auth-title">Delete event</h2>
+    <div class="card">
+        <div class="card-body">
+            <p>Are you sure you want to delete <strong>{{ event.title }}</strong>?</p>
+            <p class="text-muted text-sm">{{ event.date }} &middot; {{ event.participant_count }} participant(s) registered</p>
+            <p class="text-muted text-sm mt-8">This cannot be undone.</p>
+        </div>
+    </div>
+    <form method="post" class="mt-16">
+        {% csrf_token %}
+        <div class="flex-gap">
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="{% url 'event_detail' event.pk %}" class="btn">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

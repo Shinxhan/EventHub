@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - EventHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Events</h1>
+    {% if user.is_organizer or user.is_admin %}
+        <a href="{% url 'event_create' %}" class="btn btn-primary">Create event</a>
+    {% endif %}
+</div>
+
+<form method="get" class="search-bar">
+    <input type="text" name="q" placeholder="Search events..." value="{{ request.GET.q }}">
+</form>
+
+{% if events %}
+    <div class="event-grid">
+        {% for event in events %}
+            <div class="event-card">
+                <h3><a href="{% url 'event_detail' event.pk %}">{{ event.title }}</a></h3>
+                <div class="meta">
+                    <p>{{ event.date }} &middot; {{ event.time }}</p>
+                    <p>{{ event.location }}</p>
+                </div>
+                <p class="desc">{{ event.description|truncatewords:18 }}</p>
+                <div class="flex-gap">
+                    {% if event.is_full %}
+                        <span class="badge badge-danger">Full</span>
+                    {% elif event.is_upcoming %}
+                        <span class="badge badge-success">Upcoming</span>
+                    {% else %}
+                        <span class="badge badge-secondary">Past</span>
+                    {% endif %}
+                    <span class="text-muted text-sm">{{ event.participant_count }}/{{ event.max_participants }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <p>No events yet.{% if user.is_organizer or user.is_admin %} Create the first one.{% endif %}</p>
+    </div>
+{% endif %}
+{% endblock %}
